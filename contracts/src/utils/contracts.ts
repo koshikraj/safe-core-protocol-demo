@@ -1,5 +1,5 @@
 import { Addressable, BaseContract } from "ethers";
-import { BasePlugin, RecoveryWithDelayPlugin, RelayPlugin, TestSafeProtocolRegistryUnrestricted, WhitelistPlugin } from "../../typechain-types";
+import { BasePlugin, RecoveryWithDelayPlugin, RelayPlugin, TestSafeProtocolRegistryUnrestricted, WhitelistPlugin, WhitelistHook } from "../../typechain-types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { getProtocolManagerAddress, getProtocolRegistryAddress } from "./protocol";
 
@@ -18,3 +18,4 @@ export const getRelayPlugin = (hre: HardhatRuntimeEnvironment) => getSingleton<R
 export const getRegistry = async (hre: HardhatRuntimeEnvironment) => getInstance<TestSafeProtocolRegistryUnrestricted>(hre, "TestSafeProtocolRegistryUnrestricted", await getProtocolRegistryAddress(hre));
 export const getWhiteListPlugin = async (hre: HardhatRuntimeEnvironment) => getSingleton<WhitelistPlugin>(hre, "WhitelistPlugin");
 export const getRecoveryWithDelayPlugin= async(hre: HardhatRuntimeEnvironment) => getSingleton<RecoveryWithDelayPlugin>(hre, "RecoveryWithDelayPlugin");
+export const getWhiteListHook = async (hre: HardhatRuntimeEnvironment) => getSingleton<WhitelistHook>(hre, "WhitelistHook");

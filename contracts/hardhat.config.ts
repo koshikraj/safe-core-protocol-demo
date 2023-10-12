@@ -52,7 +52,16 @@ sharedNetworkConfig.accounts = {
 }
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.18",
+  solidity: {
+    version: "0.8.18",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 100,
+      },
+      viaIR: true,
+    },
+  },
   gasReporter: {
     enabled: (process.env.REPORT_GAS) ? true : false
   },

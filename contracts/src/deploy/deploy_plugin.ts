@@ -35,6 +35,13 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         deterministicDeployment: true,
     });
 
+    await deploy("WhitelistHook", {
+        from: deployer,
+        args: [[]],
+        log: true,
+        deterministicDeployment: true,
+    });
+
 };
 
 deploy.tags = ["plugins"];

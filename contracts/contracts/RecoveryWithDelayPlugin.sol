@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-only
 pragma solidity ^0.8.18;
-import {ISafe} from "@safe-global/safe-core-protocol/contracts/interfaces/Accounts.sol";
-import {ISafeProtocolPlugin} from "@safe-global/safe-core-protocol/contracts/interfaces/Integrations.sol";
+import {IAccount} from "@safe-global/safe-core-protocol/contracts/interfaces/Accounts.sol";
+import {ISafeProtocolPlugin} from "@safe-global/safe-core-protocol/contracts/interfaces/Modules.sol";
 import {ISafeProtocolManager} from "@safe-global/safe-core-protocol/contracts/interfaces/Manager.sol";
 import {BasePluginWithEventMetadata, PluginMetadata} from "./Base.sol";
 import {SafeTransaction, SafeRootAccess, SafeProtocolAction} from "@safe-global/safe-core-protocol/contracts/DataTypes.sol";
@@ -81,7 +81,7 @@ contract RecoveryWithDelayPlugin is BasePluginWithEventMetadata {
      */
     function executeFromPlugin(
         ISafeProtocolManager manager,
-        ISafe safe,
+        IAccount safe,
         address prevOwner,
         address oldOwner,
         address newOwner,
@@ -111,7 +111,7 @@ contract RecoveryWithDelayPlugin is BasePluginWithEventMetadata {
 
         SafeProtocolAction memory safeProtocolAction = SafeProtocolAction(payable(address(safe)), 0, txData);
         SafeRootAccess memory safeTx = SafeRootAccess(safeProtocolAction, 0, "");
-        (data) = manager.executeRootAccess(safe, safeTx);
+        (data) = manager.executeRootAccess(address(safe), safeTx);
 
         emit OwnerReplaced(address(safe), oldOwner, newOwner);
     }
@@ -264,4 +264,6 @@ contract RecoveryWithDelayPlugin is BasePluginWithEventMetadata {
     ) public view returns (bytes32) {
         return keccak256(getTransactionHashData(manager, account, prevOwner, oldOwner, newOwner, nonce));
     }
+
+    function requiresPermissions() external view returns (uint8 permissions) {}
 }

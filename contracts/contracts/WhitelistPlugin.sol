@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-only
 pragma solidity ^0.8.18;
-import {ISafe} from "@safe-global/safe-core-protocol/contracts/interfaces/Accounts.sol";
-import {ISafeProtocolPlugin} from "@safe-global/safe-core-protocol/contracts/interfaces/Integrations.sol";
+import {IAccount} from "@safe-global/safe-core-protocol/contracts/interfaces/Accounts.sol";
+import {ISafeProtocolPlugin} from "@safe-global/safe-core-protocol/contracts/interfaces/Modules.sol";
 import {ISafeProtocolManager} from "@safe-global/safe-core-protocol/contracts/interfaces/Manager.sol";
 import {SafeTransaction, SafeRootAccess, SafeProtocolAction} from "@safe-global/safe-core-protocol/contracts/DataTypes.sol";
 import {BasePluginWithEventMetadata, PluginMetadata} from "./Base.sol";
@@ -44,7 +44,7 @@ contract WhitelistPlugin is BasePluginWithEventMetadata {
      */
     function executeFromPlugin(
         ISafeProtocolManager manager,
-        ISafe safe,
+        IAccount safe,
         SafeTransaction calldata safetx
     ) external returns (bytes[] memory data) {
         address safeAddress = address(safe);
@@ -59,7 +59,7 @@ contract WhitelistPlugin is BasePluginWithEventMetadata {
             if (!whitelistedAddresses[safeAddress][actions[i].to]) revert AddressNotWhiteListed(actions[i].to);
         }
         // Test: Any tx that updates whitelist of this contract should be blocked
-        (data) = manager.executeTransaction(safe, safetx);
+        (data) = manager.executeTransaction(address(safe), safetx);
     }
 
     /**
@@ -81,4 +81,6 @@ contract WhitelistPlugin is BasePluginWithEventMetadata {
         whitelistedAddresses[msg.sender][account] = false;
         emit AddressRemovedFromWhitelist(account);
     }
+
+    function requiresPermissions() external view returns (uint8 permissions) {}
 }
